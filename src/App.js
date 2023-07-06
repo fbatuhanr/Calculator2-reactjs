@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Button, Col, Container, Row} from "react-bootstrap";
 
 class Queue extends Array {
@@ -21,59 +21,67 @@ class Queue extends Array {
 
 const App = () => {
 
-    const [input, setInput] = useState("10+20*5-20");
-    const [result, setResult] = useState();
+    const [input, setInput] = useState("");
+    const [result, setResult] = useState("10+20*5-20");
 
-    const queue = new Queue();
-    queue.enqueue(2);
-    queue.isEmpty();
-    queue.dequeue();
+    useEffect(() => {
 
-    const handleClick = () => {
-
+        if(input == "") return;
 
         if(input.includes('*')){
-
-            let multiplicationIndex = input.indexOf('*');
-
-            let leftCounter;
-            for (leftCounter = multiplicationIndex-1; leftCounter>0; leftCounter--){
-
-                if(input[leftCounter].includes('*') || input[leftCounter].includes('/') || input[leftCounter].includes('+') || input[leftCounter].includes('-'))
-                    break;
-            }
-            let leftNumber = input.substring(leftCounter+1, multiplicationIndex);
-
-           let rightCounter;
-           for (rightCounter = multiplicationIndex+1; rightCounter<input.length; rightCounter++){
-
-               if(input[rightCounter].includes('*') || input[rightCounter].includes('/') || input[rightCounter].includes('+') || input[rightCounter].includes('-'))
-                   break;
-           }
-           let rightNumber = input.substring(multiplicationIndex+1,rightCounter);
-
-
-           let multiplicationResult = leftNumber*rightNumber;
-           alert(multiplicationResult);
-
-            let multiplicationOperation = input.substring(leftCounter+1, rightCounter);
-            alert(multiplicationOperation)
-
-            setInput(input.replace(multiplicationOperation, multiplicationResult));
+            findAndEvaluateOperation('*');
         }
         else if(input.includes('/')) {
-
+            findAndEvaluateOperation('/');
         }
         else if(input.includes('+')){
-
+            findAndEvaluateOperation('+');
         }
         else if(input.includes('-')){
+            findAndEvaluateOperation('-');
+        }
+    }, [input]);
 
+
+    const findAndEvaluateOperation = (operationSymbol) => {
+
+        const operationIndex = input.indexOf(operationSymbol);
+
+        let leftPatternCounter;
+        for (leftPatternCounter = operationIndex-1; leftPatternCounter>=0; leftPatternCounter--)
+            if(/[*/+-]/.test(input[leftPatternCounter]))
+                break;
+        let leftPatternNumber = parseInt(input.substring(leftPatternCounter+1, operationIndex));
+
+        let rightPatternCounter;
+        for (rightPatternCounter = operationIndex+1; rightPatternCounter<input.length; rightPatternCounter++)
+            if(/[*/+-]/.test(input[rightPatternCounter]))
+                break;
+
+        let rightPatternNumber = parseInt(input.substring(operationIndex+1,rightPatternCounter));
+
+        let operationPattern = input.substring(leftPatternCounter+1, rightPatternCounter);
+        let operationPatternResult;
+        switch (operationSymbol){
+            case '*': operationPatternResult = leftPatternNumber * rightPatternNumber;
+                break;
+            case '/': operationPatternResult = leftPatternNumber / rightPatternNumber;
+                break;
+            case '+': operationPatternResult = leftPatternNumber + rightPatternNumber;
+                break;
+            case '-': operationPatternResult = leftPatternNumber - rightPatternNumber;
+                break;
         }
 
+        alert(operationPattern)
+        alert(operationPatternResult)
 
+        let replacedInput = input.replace(operationPattern, operationPatternResult);
+        setInput(replacedInput);
+    }
 
-
+    const handleClick = () => {
+setInput("10+20*5-20");
     }
     function split(str, index) {
         const result = [str.slice(0, index), str.slice(index)];
@@ -91,11 +99,11 @@ const App = () => {
     return (
         <div>
             <Container>
-                <Row>
+                <Row className="justify-content-center">
                     <Col>
+                        <h1>{result}</h1>
                         <h1>{input}</h1>
                         <Button variant="primary" onClick={handleClick}>Calculate</Button>
-                        <h2>Result:{result}</h2>
                     </Col>
                 </Row>
             </Container>

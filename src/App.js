@@ -105,7 +105,7 @@ const App = () => {
             <Container>
                 <Row className="justify-content-center">
                     <Col>
-                        <InputGroup className="mb-3">
+                        <InputGroup className="mb-3 mt-3" size="lg">
                             <Form.Control
                                 placeholder="Type here... 25/5*6+3"
                                 aria-label="Type here... 25/5*6+3"
@@ -114,7 +114,9 @@ const App = () => {
                             />
                         </InputGroup>
                         <h1>{input && `Result: ${input}`}</h1>
-                        <Button variant="primary" onClick={handleCalculate}>Calculate</Button>
+                    </Col>
+                    <Col xs="12" className={"d-grid gap-2"}>
+                        <Button variant="primary" size="lg" onClick={handleCalculate}>Calculate</Button>
                     </Col>
                 </Row>
             </Container>

@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Col, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, InputGroup, Row, Form} from "react-bootstrap";
 
 class Queue extends Array {
     enqueue(val) {
@@ -22,23 +22,39 @@ class Queue extends Array {
 const App = () => {
 
     const [input, setInput] = useState("");
-    const [result, setResult] = useState("10+20*5-20");
+    const [userInput, setUserInput] = useState(0);
 
     useEffect(() => {
 
         if(input == "") return;
 
-        if(input.includes('*')){
-            findAndEvaluateOperation('*');
+        if(input.includes('*') || input.includes('/')){
+
+            for (let i=0; i<input.length; i++){
+
+                if(input[i].includes('*')) {
+                    findAndEvaluateOperation('*');
+                    break;
+                }
+                else if(input[i].includes('/')) {
+                    findAndEvaluateOperation('/');
+                    break;
+                }
+            }
         }
-        else if(input.includes('/')) {
-            findAndEvaluateOperation('/');
-        }
-        else if(input.includes('+')){
-            findAndEvaluateOperation('+');
-        }
-        else if(input.includes('-')){
-            findAndEvaluateOperation('-');
+        else if(input.includes('+') || input.includes('-')){
+
+            for (let i=0; i<input.length; i++){
+
+                if(input[i].includes('+')) {
+                    findAndEvaluateOperation('+');
+                    break;
+                }
+                else if(input[i].includes('-')) {
+                    findAndEvaluateOperation('-');
+                    break;
+                }
+            }
         }
     }, [input]);
 
@@ -73,27 +89,15 @@ const App = () => {
                 break;
         }
 
-        alert(operationPattern)
-        alert(operationPatternResult)
+        // alert(operationPattern)
+        // alert(operationPatternResult)
 
         let replacedInput = input.replace(operationPattern, operationPatternResult);
         setInput(replacedInput);
     }
 
-    const handleClick = () => {
-setInput("10+20*5-20");
-    }
-    function split(str, index) {
-        const result = [str.slice(0, index), str.slice(index)];
-
-        return result;
-    }
-    function getSubstring(string, char1, char2) {
-        return string.slice(
-            string.indexOf(char1) + 1,
-            string.lastIndexOf(char2),
-        );
-    }
+    const updateInput = (val) => setUserInput(val.target.value);
+    const handleCalculate = () => setInput(userInput);
 
 
     return (
@@ -101,9 +105,16 @@ setInput("10+20*5-20");
             <Container>
                 <Row className="justify-content-center">
                     <Col>
-                        <h1>{result}</h1>
-                        <h1>{input}</h1>
-                        <Button variant="primary" onClick={handleClick}>Calculate</Button>
+                        <InputGroup className="mb-3">
+                            <Form.Control
+                                placeholder="Type here... 25/5*6+3"
+                                aria-label="Type here... 25/5*6+3"
+                                aria-describedby="basic-addon1"
+                                onChange={updateInput}
+                            />
+                        </InputGroup>
+                        <h1>{input && `Result: ${input}`}</h1>
+                        <Button variant="primary" onClick={handleCalculate}>Calculate</Button>
                     </Col>
                 </Row>
             </Container>

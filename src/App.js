@@ -4,7 +4,7 @@ import {Button, Col, Container, InputGroup, Row, Form} from "react-bootstrap";
 const App = () => {
 
     const [input, setInput] = useState("");
-    const [userInput, setUserInput] = useState(0);
+    const [userInput, setUserInput] = useState("");
 
     useEffect(() => {
 
@@ -81,24 +81,80 @@ const App = () => {
     const updateInput = (val) => setUserInput(val.target.value);
     const handleCalculate = () => setInput(userInput);
 
+    const handleButtonPress = (e) => {
+
+        switch (e.target.innerText){
+            case "Clear":
+                    setUserInput("");
+                    setInput("");
+                break;
+            case "backspace":
+                    setUserInput(userInput.slice(0, -1));
+                    setInput("");
+                break;
+            default:
+                    setUserInput(userInput + e.target.innerText);
+                break;
+        }
+    }
 
     return (
         <div>
             <Container>
-                <Row className="justify-content-center">
-                    <Col>
-                        <InputGroup className="mb-3 mt-3" size="lg">
-                            <Form.Control
-                                placeholder="Type here... 25/5*6+3"
-                                aria-label="Type here... 25/5*6+3"
-                                aria-describedby="basic-addon1"
-                                onChange={updateInput}
-                            />
-                        </InputGroup>
-                        <h1>{input && `Result: ${input}`}</h1>
-                    </Col>
-                    <Col xs="12" className={"d-grid gap-2"}>
-                        <Button variant="primary" size="lg" onClick={handleCalculate}>Calculate</Button>
+                <Row>
+                    <Col md={{span:4,offset:4}}>
+
+                        <Row className="mt-2 mb-1">
+                            <Col>
+                                <InputGroup size="lg">
+                                    <Form.Control
+                                        placeholder="You can type here... 25/5*6+3"
+                                        aria-label="You can type here... 25/5*6+3"
+                                        aria-describedby="basic-addon1"
+                                        onChange={updateInput}
+                                        value={userInput}
+                                    />
+                                </InputGroup>
+                            </Col>
+                        </Row>
+                        <Row className="gx-1">
+                            <h1>{input && `Result: ${input}`}</h1>
+                        </Row>
+
+                        <Row className="gx-1">
+                            <Col xs={9} className="d-grid"><Button className="p-2" variant="danger" size="lg" onClick={handleButtonPress}>Clear</Button></Col>
+                            <Col className="d-grid"><Button className="p-2" variant="warning" onClick={handleButtonPress}><i className="material-icons" style={{verticalAlign: "middle"}}>backspace</i></Button></Col>
+                        </Row>
+                        <Row className="gx-1 mt-1">
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>7</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>8</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>9</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="primary" size="lg" onClick={handleButtonPress}>/</Button></Col>
+                        </Row>
+                        <Row className="gx-1 mt-1">
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>4</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>5</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>6</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="primary" size="lg" onClick={handleButtonPress}>*</Button></Col>
+                        </Row>
+                        <Row className="gx-1 mt-1">
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>1</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>2</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>3</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="primary" size="lg" onClick={handleButtonPress}>-</Button></Col>
+                        </Row>
+                        <Row className="gx-1 mt-1">
+                            <Col xs={9} className="d-grid"><Button className="p-4" variant="secondary" size="lg" onClick={handleButtonPress}>0</Button></Col>
+                            <Col className="d-grid"><Button className="p-4" variant="primary" size="lg" onClick={handleButtonPress}>+</Button></Col>
+                        </Row>
+
+
+                        <Row className="mt-2 mb-1">
+                            <Col className="d-grid gap-2">
+                                <Button className="p-4" variant="success" size="lg" onClick={handleCalculate}>Calculate</Button>
+                            </Col>
+                        </Row>
+
                     </Col>
                 </Row>
             </Container>
